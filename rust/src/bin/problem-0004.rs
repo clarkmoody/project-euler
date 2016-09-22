@@ -23,5 +23,5 @@ fn main() {
 fn is_palindromic(num: u64) -> bool {
 	let s: String = format!("{}", num);
 	let r: String = s.chars().rev().collect();
-	return s == r;
+	s == r
 }
