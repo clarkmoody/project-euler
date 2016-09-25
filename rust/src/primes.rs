@@ -21,7 +21,7 @@ pub fn sieve(max: u64) -> Vec<u64> {
 	let mut ans: Vec<u64> = Vec::new();
 	for (ind, val) in seive.iter().enumerate() {
 		if *val { 
-			if ind > 0 {
+			if ind > 1 {
 				ans.push(ind as u64);
 			}
 		}
