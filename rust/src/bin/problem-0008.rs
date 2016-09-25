@@ -48,11 +48,6 @@ fn main() {
                     84580156166097919133875499200524063689912560717606\
                     05886116467109405077541002256983155200055935729725\
                     71636269561882670428252483600823257530420752963450".to_string();
-    // let mut digits: Vec<u8> = Vec::new();
-
-    // for c in num.chars() {
-    //     digits.push(try!(c.to_digit(10)))
-    // }
     
     let digits: Vec<u8> = num.chars()
         .map(|c| c.to_digit(10).unwrap() as u8)
