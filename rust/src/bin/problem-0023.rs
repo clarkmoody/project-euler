@@ -17,11 +17,35 @@
 /// Find the sum of all the positive integers which cannot be written as the 
 /// sum of two abundant numbers.
 fn main() {
-    println!("{}->{}", 1, sum_divisors(1));
-    println!("{}->{}", 2, sum_divisors(2));
-    println!("{}->{}", 5, sum_divisors(5));
-    println!("{}->{}", 12, sum_divisors(12));
-    println!("{}->{}", 28, sum_divisors(28));
+    let max: u64 = 28123;
+    let mut abundant: Vec<u64> = Vec::new();
+    for i in 1u64..(max+1) {
+    // for i in 1u64..100u64 {
+        if sum_divisors(i) > i {
+            abundant.push(i);
+        }
+    }
+    // println!("Found {} abundant numbers less than {}", abundant.len(), max);
+    // Pre-compute all abundant pair sums
+    let mut sums: Vec<bool> = vec![false; max as usize+1];
+    for j in 0..abundant.len() {
+        for k in 0..(j+1) {
+            let s = (abundant[j] + abundant[k]) as usize;
+            if s >= sums.len() {
+                break
+            }
+            sums[s] = true;
+        }
+    }
+
+    let mut sum: u64 = 0;
+    for i in 0..sums.len() {
+        if !sums[i] {
+            sum += i as u64;
+        }
+    }
+    
+    println!("Answer: {}", sum);
 }
 
 fn sum_divisors(n: u64) -> u64 {
@@ -34,7 +58,9 @@ fn sum_divisors(n: u64) -> u64 {
     loop {
         if n % i == 0 {
             sum += i;
-            sum += n/i;
+            if i != n/i {
+                sum += n/i;
+            }
             top = n/i;
         }
         i += 1;

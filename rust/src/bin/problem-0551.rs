@@ -28,6 +28,7 @@ fn main() {
     // let mut a: u64 = 31054319;
     let mut c: u64 = 0;
     let mut pow: u64 = 10;
+    let mut r: f64 = 12.0;
     loop {
         // if c > 25 {
         //     break
@@ -36,8 +37,16 @@ fn main() {
         // if i == 1000000000000000 {
         if i % pow == 0 {
             println!("a_{} = {}", i, a);
+            println!("a_10^{} = {}", (i as f64).log(10f64) as u64, a);
             pow *= 10;
             // break
+        }
+        if ((a as f64)/(i as f64) - (a/i) as f64) < 0.000000001 {
+            println!("a_{} = {}  {}", i, a, (a as f64)/(i as f64));
+        }
+        if (a as f64)/(i as f64) >= r {
+            println!("a_{} = {}  {}", i, a, (a as f64)/(i as f64));
+            r += 1.0;
         }
         // Take sum of digits of current term
         let mut b = a;
