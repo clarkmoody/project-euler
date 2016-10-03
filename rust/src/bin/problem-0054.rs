@@ -1,3 +1,8 @@
+use std::io;
+use std::io::prelude::*;
+use std::io::BufReader;
+use std::fs::File;
+
 /// Problem 54
 /// In the card game poker, a hand consists of five cards and are ranked, from 
 /// lowest to highest, in the following way:
@@ -64,9 +69,25 @@ fn main() {
         4D 4S 4H 4H AC 3D 3D 3D QD QD\n\
         2H 2D 4C 4D 4S 3C 3D 3S 9S 9D\n".to_string();
 
-    let mut wins: Vec<u32> = vec![0, 0];
+    let mut f = match File::open("../data/p054_poker.txt") {
+        Ok(file) => file,
+        Err(e) => {
+            println!("{}", e);
+            panic!("Could not open file.")
+        }
+    };
 
-    for row in data.lines() {
+    // [player 1, player 2, tie]
+    let mut wins: Vec<u32> = vec![0; 3];
+
+    for line in BufReader::new(f).lines() {
+        let row = match line {
+            Ok(s) => s,
+            Err(e) => {
+                println!("{}", e);
+                panic!()
+            }
+        };
         let mut hands: Vec<Vec<(u8,u8)>> = Vec::new();
         hands.push(Vec::new());
         hands.push(Vec::new());
@@ -110,9 +131,15 @@ fn main() {
             hand.sort_by_key(|k| k.0);
         }
 
-        println!("P1: {:?} -> {:?} \nP2: {:?} -> {:?}\n", 
-            hands[0], score(&hands[0]), hands[1], score(&hands[1]));
+        let a = score(&hands[0]);
+        let b = score(&hands[1]);
+        let w = winner(&a,&b);
+        wins[w as usize] += 1;
+
+        // println!("P1: {:?} -> {:?} \nP2: {:?} -> {:?}\nResult: {}\n", 
+        //     hands[0], a, hands[1], b, w);
     }
+    println!("Wins: {:?}", wins);
     println!("Answer: {}", wins[0]);
 }
 
@@ -146,7 +173,6 @@ fn hand_pairing(hand: &Vec<(u8,u8)>) -> Pairing {
     for card in hand {
         counts[card.0 as usize] += 1;
     }
-    println!("{:?}", counts);
     let max: u8 = *counts.iter().max().unwrap();
     let ind_max: u8 = counts.iter().position(|&x| x == max).unwrap() as u8;
     match max {
@@ -181,10 +207,24 @@ fn hand_pairing(hand: &Vec<(u8,u8)>) -> Pairing {
 
             match num_two {
                 2 => {
-                    Pairing::TwoPair { high_pair: 0, low_pair: 0, kicker: 0 }
+                    Pairing::TwoPair { 
+                        high_pair: counts.iter().rposition(|&x| x == 2).unwrap() as u8, 
+                        low_pair: counts.iter().position(|&x| x == 2).unwrap() as u8, 
+                        kicker: counts.iter().position(|&x| x == 1).unwrap() as u8 
+                    }
                 },
                 1 => {
-                    Pairing::Pair { pair: 0, kickers: vec![0] }
+                    let mut k: Vec<u8> = Vec::new();
+                    for (i,&c) in counts.iter().enumerate() {
+                        if c == 1u8 {
+                            k.push(i as u8);
+                        }
+                    }
+                    k.reverse();
+                    Pairing::Pair { 
+                        pair: counts.iter().position(|&x| x == 2).unwrap() as u8, 
+                        kickers: k 
+                    }
                 },
                 _ => {
                     Pairing::Nothing { rank: vec![0] }
@@ -278,4 +318,23 @@ fn is_straight(hand: &Vec<(u8,u8)>) -> bool {
         }
     }
     true
+}
+
+/// Determine the winner of two hands. Pass the score result for each hand
+/// to this function.
+///
+/// Return values
+/// 0 - Hand A wins
+/// 1 - Hand B wins
+/// 2 - Draw. Hands are of equal rank
+fn winner(a: &Vec<u8>, b: &Vec<u8>) -> u8 {
+    let l: Vec<usize> = vec![a.len(), b.len()];
+    for i in 0..*l.iter().max().unwrap() {
+        if a[i] > b[i] { 
+            return 0 
+        } else if b[i] > a[i] { 
+            return 1
+        }
+    }
+    2
 }
