@@ -17,9 +17,9 @@ fn main() {
 	let mut add = 1;
 	let mut inc = 5;
 	let dinc = 8;
-	let N = 1001;
-	let steps = (N-1)/2;
-	for i in 0..steps {
+	let n = 1001;
+	let steps = (n-1)/2;
+	for _ in 0..steps {
 		add += inc;
 		sum += 4*add;
 		inc += dinc;

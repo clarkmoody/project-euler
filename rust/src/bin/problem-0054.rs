@@ -1,4 +1,3 @@
-use std::io;
 use std::io::prelude::*;
 use std::io::BufReader;
 use std::fs::File;
@@ -58,18 +57,18 @@ use std::fs::File;
 /// 
 /// How many hands does Player 1 win?
 fn main() {
-    let data: String = "\
-        5H 5C 6S 6S KD 2C 2S 8S 8D TD\n\
-        5H 5C 6S 7S KD 2C 3S 8S 8D TD\n\
-        5D 8C 9S JS AC 2C 5C 7D 8S QH\n\
-        2D 9C AS AH AC 3D 6D 7D TD QD\n\
-        4D 6S 9H QH QC 3D 6D 7H QD QS\n\
-        TD JS QH KH AC 3D 6D 7D QD QD\n\
-        TD JD QD KD AD 3D 4D 5D 6D 7D\n\
-        4D 4S 4H 4H AC 3D 3D 3D QD QD\n\
-        2H 2D 4C 4D 4S 3C 3D 3S 9S 9D\n".to_string();
+    // let data: String = "\
+    //     5H 5C 6S 6S KD 2C 2S 8S 8D TD\n\
+    //     5H 5C 6S 7S KD 2C 3S 8S 8D TD\n\
+    //     5D 8C 9S JS AC 2C 5C 7D 8S QH\n\
+    //     2D 9C AS AH AC 3D 6D 7D TD QD\n\
+    //     4D 6S 9H QH QC 3D 6D 7H QD QS\n\
+    //     TD JS QH KH AC 3D 6D 7D QD QD\n\
+    //     TD JD QD KD AD 3D 4D 5D 6D 7D\n\
+    //     4D 4S 4H 4H AC 3D 3D 3D QD QD\n\
+    //     2H 2D 4C 4D 4S 3C 3D 3S 9S 9D\n".to_string();
 
-    let mut f = match File::open("../data/p054_poker.txt") {
+    let f = match File::open("../data/p054_poker.txt") {
         Ok(file) => file,
         Err(e) => {
             println!("{}", e);
